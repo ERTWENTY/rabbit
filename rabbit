@@ -1,0 +1,97 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
+contract RabbitNFT is ERC721, ERC721URIStorage, Ownable {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdCounter;
+
+    // Struct to store Rabbit attributes
+    struct Rabbit {
+        string name;
+        string color;
+        uint8 rarity; // 1 = Common, 2 = Rare, 3 = Legendary
+    }
+
+    // Mapping from token ID to Rabbit attributes
+    mapping(uint256 => Rabbit) public rabbits;
+
+    // Base URI for metadata
+    string private _baseTokenURI;
+
+    constructor(string memory baseURI) ERC721("RabbitNFT", "RNFT") Ownable(msg.sender) {
+        _baseTokenURI = baseURI;
+    }
+
+    // Mint a new Rabbit NFT
+    function mintRabbit(
+        address to,
+        string memory name,
+        string memory color,
+        uint8 rarity,
+        string memory tokenURI
+    ) public onlyOwner returns (uint256) {
+        require(rarity >= 1 && rarity <= 3, "Rarity must be between 1 and 3");
+        _tokenIdCounter.increment();
+        uint256 newTokenId = _tokenIdCounter.current();
+
+        _safeMint(to, newTokenId);
+        _setTokenURI(newTokenId, tokenURI);
+
+        rabbits[newTokenId] = Rabbit(name, color, rarity);
+
+        return newTokenId;
+    }
+
+    // Override tokenURI to return metadata
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
+    }
+
+    // Set base URI for metadata
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _baseTokenURI = baseURI;
+    }
+
+    // Get base URI
+    function _baseURI() internal view override returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    // Get Rabbit attributes
+    function getRabbit(uint256 tokenId)
+        public
+        view
+        returns (string memory name, string memory color, uint8 rarity)
+    {
+        require(_exists(tokenId), "Token does not exist");
+        Rabbit memory rabbit = rabbits[tokenId];
+        return (rabbit.name, rabbit.color, rabbit.rarity);
+    }
+
+    // Override supportsInterface for ERC721URIStorage
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    // Burn function (optional, for destroying tokens)
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
+        delete rabbits[tokenId];
+    }
+}
