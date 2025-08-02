@@ -89,9 +89,4 @@ contract RabbitNFT is ERC721, ERC721URIStorage, Ownable {
         return super.supportsInterface(interfaceId);
     }
 
-    // Burn function (optional, for destroying tokens)
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-        delete rabbits[tokenId];
-    }
-}
+   
