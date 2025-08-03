@@ -79,14 +79,6 @@ contract RabbitNFT is ERC721, ERC721URIStorage, Ownable {
         return (rabbit.name, rabbit.color, rabbit.rarity);
     }
 
-    // Override supportsInterface for ERC721URIStorage
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
-    }
+   
 
    
