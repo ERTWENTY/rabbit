@@ -68,15 +68,7 @@ contract RabbitNFT is ERC721, ERC721URIStorage, Ownable {
         return _baseTokenURI;
     }
 
-    // Get Rabbit attributes
-    function getRabbit(uint256 tokenId)
-        public
-        view
-        returns (string memory name, string memory color, uint8 rarity)
-    {
-        require(_exists(tokenId), "Token does not exist");
-        Rabbit memory rabbit = rabbits[tokenId];
-        return (rabbit.name, rabbit.color, rabbit.rarity);
+
     }
 
    
