@@ -63,13 +63,7 @@ contract RabbitNFT is ERC721, ERC721URIStorage, Ownable {
         _baseTokenURI = baseURI;
     }
 
-    // Get base URI
-    function _baseURI() internal view override returns (string memory) {
-        return _baseTokenURI;
-    }
-
-
-    }
+    
 
    
 
