@@ -1,0 +1,11 @@
+  // Mint a new Rabbit NFT
+    function mintRabbit(
+        address to,
+        string memory name,
+        string memory color,
+        uint8 rarity,
+        string memory tokenURI
+    ) public onlyOwner returns (uint256) {
+        require(rarity >= 1 && rarity <= 3, "Rarity must be between 1 and 3");
+        _tokenIdCounter.increment();
+        uint256 newTokenId = _tokenIdCounter.current();
